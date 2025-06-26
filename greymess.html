@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ru" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GreyMess</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#5D5CDE',
+                        neonPink: '#ff00ff',
+                        neonCyan: '#00ffff',
+                        neonPurple: '#8a2be2',
+                        neonGreen: '#39ff14',
+                        animeDark: '#0d0d0d',
+                        animeCard: '#1a1a1a',
+                        animeBorder: '#333333'
+                    },
+                    animation: {
+                        'neon-pulse': 'neon-pulse 2s ease-in-out infinite alternate',
+                        'float': 'float 3s ease-in-out infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternate'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+        
+        @keyframes neon-pulse {
+            from {
+                text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #ff00ff, 0 0 20px #ff00ff;
+            }
+            to {
+                text-shadow: 0 0 2px #fff, 0 0 5px #fff, 0 0 8px #ff00ff, 0 0 12px #ff00ff;
+            }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        @keyframes glow {
+            from {
+                box-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff, 0 0 15px #00ffff;
+            }
+            to {
+                box-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 30px #00ffff;
+            }
+        }
+        
+        .neon-text {
+            font-family: 'Orbitron', monospace;
+            text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #ff00ff, 0 0 20px #ff00ff;
+        }
+        
+        .neon-border {
+            border: 2px solid #00ffff;
+            box-shadow: 0 0 10px #00ffff, inset 0 0 10px #00ffff;
+        }
+        
+        .neon-glow {
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+        }
+        
+        .anime-bg {
+            background: linear-gradient(135deg, #0d0d0d 0%, #1a1a1a 50%, #0d0d0d 100%);
+        }
+        
+        .message-bubble {
+            max-width: 70%;
+            word-wrap: break-word;
+        }
+        
+        .scrollbar-thin::-webkit-scrollbar {
+            width: 4px;
+        }
+        .scrollbar-thin::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .scrollbar-thin::-webkit-scrollbar-thumb {
+            background: #ff00ff;
+            border-radius: 2px;
+            box-shadow: 0 0 5px #ff00ff;
+        }
+    </style>
+</head>
+<body class="h-full anime-bg text-white font-mono">
+    <div class="flex h-screen justify-center">
+        <!-- Центральная панель с anime дизайном -->
+        <div class="w-full max-w-4xl bg-animeCard/80 backdrop-blur-sm neon-border flex flex-col animate-float">
+            <!-- Заголовок -->
+            <div class="p-6 border-b border-neonCyan/50">
+                <div class="flex items-center justify-center">
+                    <h1 class="text-4xl font-black neon-text animate-neon-pulse">GreyMess</h1>
+                </div>
+                <div class="text-center mt-2">
+                    <p class="text-neonCyan text-sm">// Messenger //</p>
+                </div>
+            </div>
+
+            <!-- Центральная область -->
+            <div class="flex-1 flex flex-col items-center justify-center p-8 space-y-8">
+                <!-- Anime стиль приветствие -->
+                <div class="text-center space-y-4">
+                    <div class="w-32 h-32 mx-auto bg-gradient-to-br from-neonPink to-neonCyan rounded-full flex items-center justify-center neon-glow animate-glow">
+                        <span class="text-6xl">💬</span>
+                    </div>
+                    <h2 class="text-2xl font-bold text-neonPink">Добро пожаловать в GreyMess!</h2>
+                    <p class="text-gray-300 max-w-md">Футуристический мессенджер</p>
+                </div>
+
+                <!-- Кнопка регистрации -->
+                <div class="space-y-4">
+                    <a href="ВСТАВЬТЕ_ВАШУ_ССЫЛКУ_ЗДЕСЬ" target="_blank"
+                       class="block px-8 py-4 bg-gradient-to-r from-neonPink to-neonPurple text-white font-bold rounded-lg neon-border animate-glow hover:animate-pulse transition-all duration-300 text-center">
+                        🚀 Зарегистрироваться
+                    </a>
+                    <p class="text-xs text-gray-400 text-center">Нажмите, чтобы создать аккаунт</p>
+                </div>
+
+                <!-- Декоративные элементы -->
+                <div class="grid grid-cols-3 gap-4 mt-8">
+                    <div class="h-2 bg-gradient-to-r from-transparent via-neonCyan to-transparent animate-pulse"></div>
+                    <div class="h-2 bg-gradient-to-r from-transparent via-neonPink to-transparent animate-pulse" style="animation-delay: 0.5s;"></div>
+                    <div class="h-2 bg-gradient-to-r from-transparent via-neonGreen to-transparent animate-pulse" style="animation-delay: 1s;"></div>
+                </div>
+            </div>
+
+            <!-- Футер -->
+            <div class="p-4 border-t border-neonCyan/50 text-center">
+                <p class="text-xs text-gray-400">© 2024 GreyMess - Powered by Anime Technology</p>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Добавляем интерактивность для anime эффектов
+        document.addEventListener('DOMContentLoaded', function() {
+            // Создаем анимированные частицы
+            createParticles();
+            
+            // Добавляем hover эффекты
+            const registerBtn = document.querySelector('a[href*="ВСТАВЬТЕ_ВАШУ_ССЫЛКУ_ЗДЕСЬ"]');
+            if (registerBtn) {
+                registerBtn.addEventListener('mouseenter', function() {
+                    this.style.transform = 'scale(1.05)';
+                    this.style.textShadow = '0 0 20px #ff00ff';
+                });
+                
+                registerBtn.addEventListener('mouseleave', function() {
+                    this.style.transform = 'scale(1)';
+                    this.style.textShadow = 'none';
+                });
+            }
+        });
+        
+        function createParticles() {
+            const container = document.body;
+            const colors = ['#ff00ff', '#00ffff', '#8a2be2', '#39ff14'];
+            
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.style.position = 'fixed';
+                particle.style.width = '2px';
+                particle.style.height = '2px';
+                particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.borderRadius = '50%';
+                particle.style.pointerEvents = 'none';
+                particle.style.opacity = '0.7';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animation = `float ${3 + Math.random() * 2}s ease-in-out infinite`;
+                particle.style.animationDelay = Math.random() * 2 + 's';
+                particle.style.boxShadow = `0 0 10px ${particle.style.backgroundColor}`;
+                
+                container.appendChild(particle);
+            }
+        }
+    </script>
+</body>
+</html>
