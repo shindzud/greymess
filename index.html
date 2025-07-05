@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GreyMess</title>
+    <title>GreyMess - Футуристический Anime Мессенджер</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -15,6 +15,7 @@
                         neonCyan: '#00ffff',
                         neonPurple: '#8a2be2',
                         neonGreen: '#39ff14',
+                        neonOrange: '#ff6600',
                         animeDark: '#0d0d0d',
                         animeCard: '#1a1a1a',
                         animeBorder: '#333333'
@@ -22,36 +23,59 @@
                     animation: {
                         'neon-pulse': 'neon-pulse 2s ease-in-out infinite alternate',
                         'float': 'float 3s ease-in-out infinite',
-                        'glow': 'glow 2s ease-in-out infinite alternate'
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                        'slide-up': 'slide-up 0.8s ease-out',
+                        'bounce-slow': 'bounce 3s infinite',
+                        'spin-slow': 'spin 8s linear infinite',
+                        'matrix': 'matrix 4s linear infinite'
                     }
                 }
             }
         }
     </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600;800&display=swap');
         
         @keyframes neon-pulse {
             from {
-                text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #ff00ff, 0 0 20px #ff00ff;
+                text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #ff00ff, 0 0 20px #ff00ff, 0 0 35px #ff00ff;
             }
             to {
-                text-shadow: 0 0 2px #fff, 0 0 5px #fff, 0 0 8px #ff00ff, 0 0 12px #ff00ff;
+                text-shadow: 0 0 2px #fff, 0 0 5px #fff, 0 0 8px #ff00ff, 0 0 12px #ff00ff, 0 0 18px #ff00ff;
             }
         }
         
         @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            33% { transform: translateY(-10px) rotate(1deg); }
+            66% { transform: translateY(-5px) rotate(-1deg); }
         }
         
         @keyframes glow {
             from {
-                box-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff, 0 0 15px #00ffff;
+                box-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff, 0 0 15px #00ffff, 0 0 20px #00ffff;
             }
             to {
-                box-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 30px #00ffff;
+                box-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 30px #00ffff, 0 0 40px #00ffff;
             }
+        }
+        
+        @keyframes slide-up {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes matrix {
+            0% { transform: translateY(-100%); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(100vh); opacity: 0; }
         }
         
         .neon-text {
@@ -61,7 +85,7 @@
         
         .neon-border {
             border: 2px solid #00ffff;
-            box-shadow: 0 0 10px #00ffff, inset 0 0 10px #00ffff;
+            box-shadow: 0 0 10px #00ffff, inset 0 0 10px rgba(0, 255, 255, 0.1);
         }
         
         .neon-glow {
@@ -69,120 +93,845 @@
         }
         
         .anime-bg {
-            background: linear-gradient(135deg, #0d0d0d 0%, #1a1a1a 50%, #0d0d0d 100%);
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(255, 0, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(138, 43, 226, 0.1) 0%, transparent 50%),
+                linear-gradient(135deg, #0d0d0d 0%, #1a1a1a 50%, #0d0d0d 100%);
         }
         
-        .message-bubble {
-            max-width: 70%;
-            word-wrap: break-word;
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .matrix-line {
+            position: absolute;
+            color: #39ff14;
+            font-family: monospace;
+            font-size: 14px;
+            animation: matrix 4s linear infinite;
+            opacity: 0.3;
         }
         
         .scrollbar-thin::-webkit-scrollbar {
-            width: 4px;
+            width: 6px;
         }
         .scrollbar-thin::-webkit-scrollbar-track {
-            background: transparent;
+            background: rgba(255, 0, 255, 0.1);
+            border-radius: 3px;
         }
         .scrollbar-thin::-webkit-scrollbar-thumb {
-            background: #ff00ff;
-            border-radius: 2px;
+            background: linear-gradient(45deg, #ff00ff, #00ffff);
+            border-radius: 3px;
             box-shadow: 0 0 5px #ff00ff;
+        }
+        
+        .cyber-grid {
+            background-image: 
+                linear-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .hologram {
+            background: linear-gradient(45deg, transparent, rgba(0, 255, 255, 0.1), transparent);
+            animation: slide-up 2s ease-out;
+        }
+        
+        .glitch {
+            position: relative;
+            color: #fff;
+            font-size: 2rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            animation: glitch 2s infinite;
+        }
+        
+        @keyframes glitch {
+            0%, 100% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+        }
+        
+        /* Светлая тема */
+        .light-theme {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #e2e8f0;
+            --bg-card: rgba(255, 255, 255, 0.9);
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --border-color: rgba(139, 43, 226, 0.3);
+        }
+        
+        .light-theme .anime-bg {
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(255, 0, 255, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(0, 255, 255, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(138, 43, 226, 0.05) 0%, transparent 50%),
+                linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #f8fafc 100%);
+        }
+        
+        .light-theme .bg-animeCard\/80 {
+            background-color: var(--bg-card) !important;
+            backdrop-filter: blur(10px);
+        }
+        
+        .light-theme .bg-animeCard\/60 {
+            background-color: rgba(255, 255, 255, 0.7) !important;
+        }
+        
+        .light-theme .bg-animeCard\/20 {
+            background-color: rgba(255, 255, 255, 0.3) !important;
+        }
+        
+        .light-theme .bg-animeCard\/10 {
+            background-color: rgba(255, 255, 255, 0.2) !important;
+        }
+        
+        .light-theme .text-white {
+            color: var(--text-primary) !important;
+        }
+        
+        .light-theme .text-gray-300 {
+            color: var(--text-secondary) !important;
+        }
+        
+        .light-theme .text-gray-400 {
+            color: #64748b !important;
+        }
+        
+        .light-theme .text-gray-500 {
+            color: #64748b !important;
+        }
+        
+        .light-theme .neon-border {
+            border: 2px solid var(--border-color);
+            box-shadow: 0 0 10px rgba(139, 43, 226, 0.2), inset 0 0 10px rgba(139, 43, 226, 0.05);
+        }
+        
+        .light-theme .border-neonCyan\/30 {
+            border-color: rgba(139, 43, 226, 0.2) !important;
+        }
+        
+        .light-theme .border-neonCyan\/50 {
+            border-color: rgba(139, 43, 226, 0.3) !important;
+        }
+        
+        /* Переключатель темы */
+        .theme-switch {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background: linear-gradient(45deg, #ff00ff, #00ffff);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .theme-switch::before {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .theme-switch.active::before {
+            transform: translateX(30px);
+            background: #1e293b;
+        }
+        
+        .theme-switch:hover {
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
         }
     </style>
 </head>
-<body class="h-full anime-bg text-white font-mono">
-    <div class="flex h-screen justify-center">
-        <!-- Центральная панель с anime дизайном -->
-        <div class="w-full max-w-4xl bg-animeCard/80 backdrop-blur-sm neon-border flex flex-col animate-float">
-            <!-- Заголовок -->
-            <div class="p-6 border-b border-neonCyan/50">
-                <div class="flex items-center justify-center">
-                    <h1 class="text-4xl font-black neon-text animate-neon-pulse">GreyMess</h1>
-                </div>
-                <div class="text-center mt-2">
-                    <p class="text-neonCyan text-sm">// Messenger //</p>
-                </div>
-            </div>
-
-            <!-- Центральная область -->
-            <div class="flex-1 flex flex-col items-center justify-center p-8 space-y-8">
-                <!-- Anime стиль приветствие -->
-                <div class="text-center space-y-4">
-                    <div class="w-32 h-32 mx-auto bg-gradient-to-br from-neonPink to-neonCyan rounded-full flex items-center justify-center neon-glow animate-glow">
-                        <span class="text-6xl">💬</span>
+<body class="h-full anime-bg text-white font-mono overflow-x-hidden">
+    <!-- Matrix фон -->
+    <div class="matrix-bg" id="matrixBg"></div>
+    
+    <!-- Основной контейнер -->
+    <div class="relative z-10">
+        <!-- Навигация -->
+        <nav class="fixed top-0 w-full bg-animeCard/90 backdrop-blur-md border-b border-neonCyan/30 z-50">
+            <div class="max-w-6xl mx-auto px-4 py-3">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-8 h-8 bg-gradient-to-br from-neonPink to-neonCyan rounded-full animate-spin-slow"></div>
+                        <span class="text-xl font-bold neon-text">GreyMess</span>
                     </div>
-                    <h2 class="text-2xl font-bold text-neonPink">Добро пожаловать в GreyMess!</h2>
-                    <p class="text-gray-300 max-w-md">beta version</p>
-                </div>
-
-                <!-- Кнопка регистрации -->
-                <div class="space-y-4">
-                    <a href="https://t.me/harom_imam/5" target="_blank"
-                       class="block px-8 py-4 bg-gradient-to-r from-neonPink to-neonPurple text-white font-bold rounded-lg neon-border animate-glow hover:animate-pulse transition-all duration-300 text-center">
-                        🚀 Подключиться
-                    </a>
-                    <p class="text-xs text-gray-400 text-center">Нажмите, чтобы подключить аккаунт</p>
-                </div>
-
-                <!-- Декоративные элементы -->
-                <div class="grid grid-cols-3 gap-4 mt-8">
-                    <div class="h-2 bg-gradient-to-r from-transparent via-neonCyan to-transparent animate-pulse"></div>
-                    <div class="h-2 bg-gradient-to-r from-transparent via-neonPink to-transparent animate-pulse" style="animation-delay: 0.5s;"></div>
-                    <div class="h-2 bg-gradient-to-r from-transparent via-neonGreen to-transparent animate-pulse" style="animation-delay: 1s;"></div>
+                    <div class="flex items-center space-x-6">
+                        <div class="hidden md:flex space-x-6 text-sm">
+                            <a href="#features" class="hover:text-neonCyan transition-colors">Функции</a>
+                            <a href="#screenshots" class="hover:text-neonCyan transition-colors">Скриншоты</a>
+                            <a href="#stats" class="hover:text-neonCyan transition-colors">Статистика</a>
+                        </div>
+                        
+                        <!-- Переключатель темы -->
+                        <div class="flex items-center space-x-3">
+                            <span class="text-xs">🌙</span>
+                            <div class="theme-switch" id="themeSwitch" onclick="toggleTheme()"></div>
+                            <span class="text-xs">☀️</span>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </nav>
 
-            <!-- Футер -->
-            <div class="p-4 border-t border-neonCyan/50 text-center">
-                <p class="text-xs text-gray-400">© 2024 GreyMess - Powered by Anime Technology</p>
+        <!-- Главный экран -->
+        <section class="min-h-screen flex items-center justify-center pt-16">
+            <div class="max-w-4xl mx-auto px-4">
+                <div class="bg-animeCard/80 backdrop-blur-sm neon-border rounded-2xl p-8 animate-slide-up cyber-grid">
+                    <!-- Заголовок -->
+                    <div class="text-center mb-12">
+                        <div class="inline-block animate-float">
+                            <h1 class="text-6xl md:text-8xl font-black neon-text animate-neon-pulse mb-4">
+                                GreyMess
+                            </h1>
+                        </div>
+                        <p class="text-neonCyan text-lg mb-2">// Anime Style Messenger //</p>
+                        <p class="text-gray-300 max-w-2xl mx-auto text-lg">
+                            Революционный мессенджер будущего с неоновыми подсветками, 
+                            anime эстетикой и технологиями киберпанка
+                        </p>
+                    </div>
+
+                    <!-- Центральная область -->
+                    <div class="grid md:grid-cols-2 gap-12 items-center">
+                        <!-- Левая часть - описание -->
+                        <div class="space-y-6">
+                            <div class="hologram p-6 rounded-lg">
+                                <h2 class="text-2xl font-bold text-neonPink mb-4">🚀 Запустите в будущее!</h2>
+                                <ul class="space-y-3 text-gray-300">
+                                    <li class="flex items-center">
+                                        <span class="text-neonGreen mr-3">▶</span>
+                                        Мгновенные сообщения со скоростью света
+                                    </li>
+                                    <li class="flex items-center">
+                                        <span class="text-neonCyan mr-3">▶</span>
+                                        Банковский уровень шифрования
+                                    </li>
+                                    <li class="flex items-center">
+                                        <span class="text-neonPurple mr-3">▶</span>
+                                        Уникальный anime дизайн
+                                    </li>
+                                    <li class="flex items-center">
+                                        <span class="text-neonOrange mr-3">▶</span>
+                                        Безлимитная кастомизация
+                                    </li>
+                                </ul>
+                            </div>
+                            
+                            <!-- Кнопка регистрации -->
+                            <div class="text-center">
+                                <a href="ВСТАВЬТЕ_ВАШУ_ССЫЛКУ_ЗДЕСЬ" target="_blank"
+                                   class="inline-block px-10 py-4 bg-gradient-to-r from-neonPink via-neonPurple to-neonCyan text-white font-bold rounded-2xl neon-border animate-glow hover:animate-pulse transition-all duration-300 text-lg transform hover:scale-105">
+                                    🚀 Присоединиться к революции
+                                </a>
+                                <p class="text-xs text-gray-400 mt-3">Бесплатная регистрация • Мгновенный доступ</p>
+                            </div>
+                        </div>
+
+                        <!-- Правая часть - анимированная визуализация -->
+                        <div class="relative">
+                            <div class="w-80 h-80 mx-auto relative">
+                                <!-- Орбитальные кольца -->
+                                <div class="absolute inset-0 border-2 border-neonCyan/30 rounded-full animate-spin-slow"></div>
+                                <div class="absolute inset-4 border-2 border-neonPink/30 rounded-full animate-spin-slow" style="animation-direction: reverse; animation-duration: 12s;"></div>
+                                <div class="absolute inset-8 border-2 border-neonGreen/30 rounded-full animate-spin-slow" style="animation-duration: 16s;"></div>
+                                
+                                <!-- Центральный элемент -->
+                                <div class="absolute inset-20 bg-gradient-to-br from-neonPink to-neonCyan rounded-full flex items-center justify-center neon-glow animate-bounce-slow">
+                                    <span class="text-6xl">💬</span>
+                                </div>
+                                
+                                <!-- Плавающие иконки -->
+                                <div class="absolute top-4 right-4 text-2xl animate-float" style="animation-delay: 0.5s;">🌟</div>
+                                <div class="absolute bottom-8 left-8 text-2xl animate-float" style="animation-delay: 1s;">⚡</div>
+                                <div class="absolute top-16 left-0 text-2xl animate-float" style="animation-delay: 1.5s;">🛡️</div>
+                                <div class="absolute bottom-4 right-16 text-2xl animate-float" style="animation-delay: 2s;">🎨</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Секция функций -->
+        <section id="features" class="py-20 px-4">
+            <div class="max-w-6xl mx-auto">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold neon-text mb-4">Функции будущего</h2>
+                    <p class="text-gray-300 text-lg">Технологии, которые изменят ваш взгляд на общение</p>
+                </div>
+                
+                <div class="grid md:grid-cols-3 gap-8">
+                    <!-- Функция 1 -->
+                    <div class="bg-animeCard/60 p-6 rounded-xl neon-border hover:neon-glow transition-all duration-300 animate-slide-up">
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-gradient-to-br from-neonPink to-neonPurple rounded-full flex items-center justify-center mx-auto mb-4 animate-glow">
+                                <span class="text-2xl">🧠</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-neonPink mb-3">AI Ассистент</h3>
+                            <p class="text-gray-300 text-sm">Умный помощник с нейросетью для автокоррекции, перевода и предложения ответов</p>
+                        </div>
+                    </div>
+
+                    <!-- Функция 2 -->
+                    <div class="bg-animeCard/60 p-6 rounded-xl neon-border hover:neon-glow transition-all duration-300 animate-slide-up" style="animation-delay: 0.2s;">
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-gradient-to-br from-neonCyan to-neonGreen rounded-full flex items-center justify-center mx-auto mb-4 animate-glow">
+                                <span class="text-2xl">🌐</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-neonCyan mb-3">Квантовая сеть</h3>
+                            <p class="text-gray-300 text-sm">Связь через квантовые каналы для максимальной безопасности и скорости</p>
+                        </div>
+                    </div>
+
+                    <!-- Функция 3 -->
+                    <div class="bg-animeCard/60 p-6 rounded-xl neon-border hover:neon-glow transition-all duration-300 animate-slide-up" style="animation-delay: 0.4s;">
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-gradient-to-br from-neonGreen to-neonOrange rounded-full flex items-center justify-center mx-auto mb-4 animate-glow">
+                                <span class="text-2xl">🎮</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-neonGreen mb-3">Game Mode</h3>
+                            <p class="text-gray-300 text-sm">Встроенные мини-игры, стримы и совместный просмотр контента</p>
+                        </div>
+                    </div>
+
+                    <!-- Функция 4 -->
+                    <div class="bg-animeCard/60 p-6 rounded-xl neon-border hover:neon-glow transition-all duration-300 animate-slide-up" style="animation-delay: 0.6s;">
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-gradient-to-br from-neonPurple to-neonPink rounded-full flex items-center justify-center mx-auto mb-4 animate-glow">
+                                <span class="text-2xl">🔮</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-neonPurple mb-3">Голограммы</h3>
+                            <p class="text-gray-300 text-sm">3D аватары, голографические стикеры и дополненная реальность</p>
+                        </div>
+                    </div>
+
+                    <!-- Функция 5 -->
+                    <div class="bg-animeCard/60 p-6 rounded-xl neon-border hover:neon-glow transition-all duration-300 animate-slide-up" style="animation-delay: 0.8s;">
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-gradient-to-br from-neonOrange to-neonCyan rounded-full flex items-center justify-center mx-auto mb-4 animate-glow">
+                                <span class="text-2xl">🎵</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-neonOrange mb-3">Звуковые волны</h3>
+                            <p class="text-gray-300 text-sm">Кристально чистый звук, шумоподавление и 3D аудио эффекты</p>
+                        </div>
+                    </div>
+
+                    <!-- Функция 6 -->
+                    <div class="bg-animeCard/60 p-6 rounded-xl neon-border hover:neon-glow transition-all duration-300 animate-slide-up" style="animation-delay: 1s;">
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-gradient-to-br from-neonCyan to-neonPurple rounded-full flex items-center justify-center mx-auto mb-4 animate-glow">
+                                <span class="text-2xl">⏰</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-neonCyan mb-3">Машина времени</h3>
+                            <p class="text-gray-300 text-sm">Путешествие по истории переписки с временными метками и backup</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Статистика -->
+        <section id="stats" class="py-20 px-4 bg-animeCard/20">
+            <div class="max-w-4xl mx-auto text-center">
+                <h2 class="text-4xl font-bold neon-text mb-12">GreyMess в цифрах</h2>
+                <div class="grid md:grid-cols-4 gap-8">
+                    <div class="p-6">
+                        <div class="text-5xl font-black text-neonPink neon-text mb-2" id="users-counter">0</div>
+                        <p class="text-gray-300">Активных пользователей</p>
+                    </div>
+                    <div class="p-6">
+                        <div class="text-5xl font-black text-neonCyan neon-text mb-2" id="messages-counter">0</div>
+                        <p class="text-gray-300">Сообщений в секунду</p>
+                    </div>
+                    <div class="p-6">
+                        <div class="text-5xl font-black text-neonGreen neon-text mb-2" id="countries-counter">0</div>
+                        <p class="text-gray-300">Стран мира</p>
+                    </div>
+                    <div class="p-6">
+                        <div class="text-5xl font-black text-neonPurple neon-text mb-2" id="uptime-counter">0</div>
+                        <p class="text-gray-300">% Время работы</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Лента преимуществ с фото -->
+        <section id="screenshots" class="py-20 px-4">
+            <div class="max-w-6xl mx-auto">
+                <h3 class="text-4xl font-bold text-center mb-12 neon-text">Преимущества GreyMess</h3>
+                
+                <div class="overflow-x-auto scrollbar-thin">
+                    <div class="flex space-x-6 pb-6" style="width: max-content;">
+                        
+                        <!-- Карточка 1: Anime интерфейс -->
+                        <div class="w-72 bg-animeCard/60 rounded-xl neon-border p-6 flex-shrink-0 hover:neon-glow transition-all duration-300">
+                            <div class="h-48 bg-gradient-to-br from-neonPink/20 to-neonCyan/20 rounded-lg mb-4 flex items-center justify-center neon-glow relative overflow-hidden">
+                                <div class="absolute inset-0 cyber-grid opacity-30"></div>
+                                <div class="text-center relative z-10">
+                                    <div class="text-5xl mb-3 animate-bounce-slow">🎌</div>
+                                    <div class="text-xs text-gray-400">Скриншот<br/>Anime интерфейса</div>
+                                </div>
+                            </div>
+                            <h4 class="text-xl text-neonCyan font-bold mb-3">Уникальный Anime дизайн</h4>
+                            <p class="text-gray-300 text-sm leading-relaxed">Футуристический интерфейс с неоновыми подсветками и анимациями в стиле аниме. Каждый элемент продуман до мелочей.</p>
+                        </div>
+
+                        <!-- Карточка 2: Быстрые сообщения -->
+                        <div class="w-72 bg-animeCard/60 rounded-xl neon-border p-6 flex-shrink-0 hover:neon-glow transition-all duration-300">
+                            <div class="h-48 bg-gradient-to-br from-neonGreen/20 to-neonPurple/20 rounded-lg mb-4 flex items-center justify-center neon-glow relative overflow-hidden">
+                                <div class="absolute inset-0 cyber-grid opacity-30"></div>
+                                <div class="text-center relative z-10">
+                                    <div class="text-5xl mb-3 animate-bounce-slow">⚡</div>
+                                    <div class="text-xs text-gray-400">Скриншот<br/>Быстрых сообщений</div>
+                                </div>
+                            </div>
+                            <h4 class="text-xl text-neonGreen font-bold mb-3">Молниеносная скорость</h4>
+                            <p class="text-gray-300 text-sm leading-relaxed">Мгновенная доставка сообщений с подтверждением прочтения в реальном времени. Технология квантовых каналов.</p>
+                        </div>
+
+                        <!-- Карточка 3: Безопасность -->
+                        <div class="w-72 bg-animeCard/60 rounded-xl neon-border p-6 flex-shrink-0 hover:neon-glow transition-all duration-300">
+                            <div class="h-48 bg-gradient-to-br from-neonPurple/20 to-neonPink/20 rounded-lg mb-4 flex items-center justify-center neon-glow relative overflow-hidden">
+                                <div class="absolute inset-0 cyber-grid opacity-30"></div>
+                                <div class="text-center relative z-10">
+                                    <div class="text-5xl mb-3 animate-bounce-slow">🛡️</div>
+                                    <div class="text-xs text-gray-400">Скриншот<br/>Настроек безопасности</div>
+                                </div>
+                            </div>
+                            <h4 class="text-xl text-neonPurple font-bold mb-3">Максимальная защита</h4>
+                            <p class="text-gray-300 text-sm leading-relaxed">Шифрование end-to-end и защита персональных данных на уровне банков. Ваша приватность - наш приоритет.</p>
+                        </div>
+
+                        <!-- Карточка 4: Темы -->
+                        <div class="w-72 bg-animeCard/60 rounded-xl neon-border p-6 flex-shrink-0 hover:neon-glow transition-all duration-300">
+                            <div class="h-48 bg-gradient-to-br from-neonCyan/20 to-neonGreen/20 rounded-lg mb-4 flex items-center justify-center neon-glow relative overflow-hidden">
+                                <div class="absolute inset-0 cyber-grid opacity-30"></div>
+                                <div class="text-center relative z-10">
+                                    <div class="text-5xl mb-3 animate-bounce-slow">🎨</div>
+                                    <div class="text-xs text-gray-400">Скриншот<br/>Настройки тем</div>
+                                </div>
+                            </div>
+                            <h4 class="text-xl text-neonCyan font-bold mb-3">Кастомизация</h4>
+                            <p class="text-gray-300 text-sm leading-relaxed">Множество тем, цветовых схем и персонализация интерфейса под себя. Создайте уникальный стиль.</p>
+                        </div>
+
+                        <!-- Карточка 5: Групповые чаты -->
+                        <div class="w-72 bg-animeCard/60 rounded-xl neon-border p-6 flex-shrink-0 hover:neon-glow transition-all duration-300">
+                            <div class="h-48 bg-gradient-to-br from-neonPink/20 to-neonPurple/20 rounded-lg mb-4 flex items-center justify-center neon-glow relative overflow-hidden">
+                                <div class="absolute inset-0 cyber-grid opacity-30"></div>
+                                <div class="text-center relative z-10">
+                                    <div class="text-5xl mb-3 animate-bounce-slow">👥</div>
+                                    <div class="text-xs text-gray-400">Скриншот<br/>Групповых чатов</div>
+                                </div>
+                            </div>
+                            <h4 class="text-xl text-neonPink font-bold mb-3">Групповое общение</h4>
+                            <p class="text-gray-300 text-sm leading-relaxed">Удобные групповые чаты с расширенными возможностями модерации и управления участниками.</p>
+                        </div>
+
+                    </div>
+                </div>
+                
+                <!-- Индикатор прокрутки -->
+                <div class="text-center mt-6">
+                    <p class="text-sm text-gray-500">← Прокрутите влево/вправо для просмотра всех преимуществ →</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Модальное окно FAQ -->
+        <div id="faqModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+            <div class="bg-animeCard/95 backdrop-blur-md rounded-2xl neon-border max-w-4xl w-full max-h-[90vh] overflow-y-auto scrollbar-thin">
+                <!-- Заголовок модального окна -->
+                <div class="sticky top-0 bg-animeCard/95 backdrop-blur-md p-6 border-b border-neonCyan/30">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-3xl font-bold neon-text">❓ Часто задаваемые вопросы</h2>
+                        <button onclick="closeFAQ()" class="w-10 h-10 bg-gradient-to-br from-neonPink to-neonCyan rounded-full flex items-center justify-center hover:animate-pulse transition-all duration-300">
+                            <span class="text-white font-bold">✕</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Содержимое FAQ -->
+                <div class="p-6 space-y-6">
+                    <div class="bg-animeCard/60 rounded-xl neon-border p-6 hover:neon-glow transition-all duration-300">
+                        <h3 class="text-xl font-bold text-neonCyan mb-3">🤖 Что такое GreyMess?</h3>
+                        <p class="text-gray-300">GreyMess - это революционный мессенджер будущего с уникальным anime дизайном, неоновыми подсветками и передовыми технологиями безопасности. Мы объединяем эстетику киберпанка с современными возможностями общения.</p>
+                    </div>
+                    
+                    <div class="bg-animeCard/60 rounded-xl neon-border p-6 hover:neon-glow transition-all duration-300">
+                        <h3 class="text-xl font-bold text-neonPink mb-3">💰 Бесплатно ли использование?</h3>
+                        <p class="text-gray-300">Да! GreyMess полностью бесплатен для всех пользователей. Мы верим, что технологии будущего должны быть доступны каждому. Никаких скрытых платежей или подписок.</p>
+                    </div>
+                    
+                    <div class="bg-animeCard/60 rounded-xl neon-border p-6 hover:neon-glow transition-all duration-300">
+                        <h3 class="text-xl font-bold text-neonGreen mb-3">🔒 Насколько безопасен GreyMess?</h3>
+                        <p class="text-gray-300">Мы используем квантовое шифрование end-to-end, которое обеспечивает банковский уровень защиты ваших данных и переписки. Ваши сообщения защищены от любых перехватов.</p>
+                    </div>
+                    
+                    <div class="bg-animeCard/60 rounded-xl neon-border p-6 hover:neon-glow transition-all duration-300">
+                        <h3 class="text-xl font-bold text-neonPurple mb-3">📱 На каких устройствах работает?</h3>
+                        <p class="text-gray-300">GreyMess доступен на всех платформах: iOS, Android, Windows, macOS, Linux и в веб-версии с полной синхронизацией между устройствами.</p>
+                    </div>
+                    
+                    <div class="bg-animeCard/60 rounded-xl neon-border p-6 hover:neon-glow transition-all duration-300">
+                        <h3 class="text-xl font-bold text-neonOrange mb-3">🎨 Можно ли настроить внешний вид?</h3>
+                        <p class="text-gray-300">Конечно! GreyMess предлагает множество тем, неоновых цветовых схем и возможность полной персонализации интерфейса. Создайте уникальный стиль под свой вкус.</p>
+                    </div>
+                    
+                    <div class="bg-animeCard/60 rounded-xl neon-border p-6 hover:neon-glow transition-all duration-300">
+                        <h3 class="text-xl font-bold text-neonCyan mb-3">⚡ Как быстро доставляются сообщения?</h3>
+                        <p class="text-gray-300">Благодаря технологии квантовых каналов, сообщения доставляются мгновенно - менее чем за 1 секунду по всему миру. Скорость света - наш стандарт!</p>
+                    </div>
+                    
+                    <div class="bg-animeCard/60 rounded-xl neon-border p-6 hover:neon-glow transition-all duration-300">
+                        <h3 class="text-xl font-bold text-neonGreen mb-3">🎮 Есть ли игровые функции?</h3>
+                        <p class="text-gray-300">Да! GreyMess включает Game Mode с встроенными мини-играми, возможностью стриминга, совместного просмотра контента и специальными геймерскими фишками.</p>
+                    </div>
+                    
+                    <div class="bg-animeCard/60 rounded-xl neon-border p-6 hover:neon-glow transition-all duration-300">
+                        <h3 class="text-xl font-bold text-neonPink mb-3">🔮 Что такое голограммы в GreyMess?</h3>
+                        <p class="text-gray-300">Наша технология голограмм включает 3D аватары, объемные стикеры, дополненную реальность и возможность создавать голографические эффекты прямо в чате.</p>
+                    </div>
+                </div>
             </div>
         </div>
 
+        <!-- Футер -->
+        <footer class="py-12 px-4 border-t border-neonCyan/30">
+            <div class="max-w-4xl mx-auto text-center space-y-6">
+                <div class="flex justify-center space-x-8 text-sm">
+                    <a href="#" class="text-neonCyan hover:text-neonPink transition-colors">Условия использования</a>
+                    <a href="#" class="text-neonCyan hover:text-neonPink transition-colors">Политика конфиденциальности</a>
+                    <a href="#" onclick="openFAQ()" class="text-neonCyan hover:text-neonPink transition-colors cursor-pointer">❓ FAQ</a>
+                    <a href="#" class="text-neonCyan hover:text-neonPink transition-colors">Поддержка</a>
+                </div>
+                
+                <div class="flex justify-center space-x-6">
+                    <div class="w-8 h-8 bg-gradient-to-br from-neonPink to-neonCyan rounded-full flex items-center justify-center hover:animate-pulse cursor-pointer">
+                        <span class="text-sm">TG</span>
+                    </div>
+                    <div class="w-8 h-8 bg-gradient-to-br from-neonCyan to-neonGreen rounded-full flex items-center justify-center hover:animate-pulse cursor-pointer">
+                        <span class="text-sm">VK</span>
+                    </div>
+                    <div class="w-8 h-8 bg-gradient-to-br from-neonGreen to-neonPurple rounded-full flex items-center justify-center hover:animate-pulse cursor-pointer">
+                        <span class="text-sm">YT</span>
+                    </div>
+                </div>
+                
+                <p class="text-xs text-gray-400">© 2024 GreyMess - Powered by Anime Technology & Quantum Computing</p>
+                <p class="text-xs text-gray-500">🌟 Соединяя реальность с будущим 🌟</p>
+            </div>
+        </footer>
     </div>
 
     <script>
-        // Добавляем интерактивность для anime эффектов
-        document.addEventListener('DOMContentLoaded', function() {
-            // Создаем анимированные частицы
-            createParticles();
+        // Matrix эффект
+        function createMatrix() {
+            const matrix = document.getElementById('matrixBg');
+            const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
             
-            // Добавляем hover эффекты
-            const registerBtn = document.querySelector('a[href*="ВСТАВЬТЕ_ВАШУ_ССЫЛКУ_ЗДЕСЬ"]');
-            if (registerBtn) {
-                registerBtn.addEventListener('mouseenter', function() {
-                    this.style.transform = 'scale(1.05)';
-                    this.style.textShadow = '0 0 20px #ff00ff';
-                });
-                
-                registerBtn.addEventListener('mouseleave', function() {
-                    this.style.transform = 'scale(1)';
-                    this.style.textShadow = 'none';
-                });
+            for (let i = 0; i < 15; i++) {
+                const line = document.createElement('div');
+                line.className = 'matrix-line';
+                line.style.left = Math.random() * 100 + '%';
+                line.style.animationDelay = Math.random() * 4 + 's';
+                line.textContent = chars.charAt(Math.floor(Math.random() * chars.length));
+                matrix.appendChild(line);
             }
-        });
-        
+        }
+
+        // Анимированные счетчики
+        function animateCounter(id, target, suffix = '') {
+            const element = document.getElementById(id);
+            let current = 0;
+            const increment = target / 100;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                element.textContent = Math.floor(current) + suffix;
+            }, 20);
+        }
+
+        // Создание частиц
         function createParticles() {
             const container = document.body;
-            const colors = ['#ff00ff', '#00ffff', '#8a2be2', '#39ff14'];
+            const isLightTheme = document.body.classList.contains('light-theme');
             
-            for (let i = 0; i < 20; i++) {
+            let colors, opacity;
+            if (isLightTheme) {
+                colors = ['rgba(255, 0, 255, 0.4)', 'rgba(0, 255, 255, 0.4)', 'rgba(138, 43, 226, 0.4)', 'rgba(57, 255, 20, 0.4)', 'rgba(255, 102, 0, 0.4)'];
+                opacity = '0.3';
+            } else {
+                colors = ['#ff00ff', '#00ffff', '#8a2be2', '#39ff14', '#ff6600'];
+                opacity = '0.6';
+            }
+            
+            for (let i = 0; i < 30; i++) {
                 const particle = document.createElement('div');
                 particle.style.position = 'fixed';
-                particle.style.width = '2px';
-                particle.style.height = '2px';
+                particle.style.width = Math.random() * 4 + 2 + 'px';
+                particle.style.height = particle.style.width;
                 particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
                 particle.style.borderRadius = '50%';
                 particle.style.pointerEvents = 'none';
-                particle.style.opacity = '0.7';
+                particle.style.opacity = opacity;
                 particle.style.left = Math.random() * 100 + '%';
                 particle.style.top = Math.random() * 100 + '%';
-                particle.style.animation = `float ${3 + Math.random() * 2}s ease-in-out infinite`;
-                particle.style.animationDelay = Math.random() * 2 + 's';
+                particle.style.animation = `float ${3 + Math.random() * 4}s ease-in-out infinite`;
+                particle.style.animationDelay = Math.random() * 3 + 's';
                 particle.style.boxShadow = `0 0 10px ${particle.style.backgroundColor}`;
+                particle.style.zIndex = '5';
                 
                 container.appendChild(particle);
             }
         }
+
+        // Плавная прокрутка
+        function smoothScroll() {
+            const links = document.querySelectorAll('a[href^="#"]');
+            links.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const target = document.querySelector(link.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                });
+            });
+        }
+
+        // Hover эффекты для кнопки регистрации
+        function addButtonEffects() {
+            const registerBtn = document.querySelector('a[href*="ВСТАВЬТЕ_ВАШУ_ССЫЛКУ_ЗДЕСЬ"]');
+            if (registerBtn) {
+                registerBtn.addEventListener('mouseenter', function() {
+                    this.style.textShadow = '0 0 20px #ff00ff, 0 0 30px #ff00ff';
+                    this.style.transform = 'scale(1.05) translateY(-2px)';
+                });
+                
+                registerBtn.addEventListener('mouseleave', function() {
+                    this.style.textShadow = 'none';
+                    this.style.transform = 'scale(1) translateY(0)';
+                });
+            }
+        }
+
+        // Управление темой с расширенным сохранением
+        const ThemeManager = {
+            // Ключ для localStorage
+            STORAGE_KEY: 'greymess_theme_preference',
+            
+            // Получить текущую тему
+            getCurrentTheme() {
+                return document.body.classList.contains('light-theme') ? 'light' : 'dark';
+            },
+            
+            // Сохранить тему в localStorage
+            saveTheme(theme) {
+                try {
+                    localStorage.setItem(this.STORAGE_KEY, theme);
+                    // Дополнительно сохраняем время изменения
+                    localStorage.setItem(this.STORAGE_KEY + '_timestamp', Date.now().toString());
+                    console.log(`🎨 Тема "${theme}" сохранена`);
+                } catch (error) {
+                    console.error('Ошибка сохранения темы:', error);
+                }
+            },
+            
+            // Загрузить тему из localStorage
+            loadTheme() {
+                try {
+                    const savedTheme = localStorage.getItem(this.STORAGE_KEY);
+                    const timestamp = localStorage.getItem(this.STORAGE_KEY + '_timestamp');
+                    
+                    if (savedTheme && timestamp) {
+                        console.log(`🔄 Загружена сохраненная тема: "${savedTheme}"`);
+                        return savedTheme;
+                    }
+                } catch (error) {
+                    console.error('Ошибка загрузки темы:', error);
+                }
+                
+                // Возвращаем тему по умолчанию
+                console.log('🌙 Используется тема по умолчанию: dark');
+                return 'dark';
+            },
+            
+            // Применить тему
+            applyTheme(theme) {
+                const body = document.body;
+                const themeSwitch = document.getElementById('themeSwitch');
+                
+                if (theme === 'light') {
+                    body.classList.add('light-theme');
+                    if (themeSwitch) themeSwitch.classList.add('active');
+                } else {
+                    body.classList.remove('light-theme');
+                    if (themeSwitch) themeSwitch.classList.remove('active');
+                }
+                
+                // Обновляем частицы
+                this.updateParticlesForTheme(theme);
+            },
+            
+            // Переключить тему
+            toggleTheme() {
+                const currentTheme = this.getCurrentTheme();
+                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                
+                this.applyTheme(newTheme);
+                this.saveTheme(newTheme);
+                
+                // Анимация переключения
+                this.animateThemeSwitch();
+                
+                console.log(`🔄 Тема изменена: ${currentTheme} → ${newTheme}`);
+            },
+            
+            // Инициализация темы
+            initTheme() {
+                const savedTheme = this.loadTheme();
+                this.applyTheme(savedTheme);
+            },
+            
+            // Анимация переключения
+            animateThemeSwitch() {
+                const themeSwitch = document.getElementById('themeSwitch');
+                if (themeSwitch) {
+                    themeSwitch.style.transform = 'scale(1.1)';
+                    setTimeout(() => {
+                        themeSwitch.style.transform = 'scale(1)';
+                    }, 150);
+                }
+            },
+            
+            // Обновление частиц для темы
+            updateParticlesForTheme(theme) {
+                // Удаляем старые частицы
+                const oldParticles = document.querySelectorAll('[style*="position: fixed"][style*="border-radius: 50%"]');
+                oldParticles.forEach(particle => {
+                    particle.style.opacity = '0';
+                    setTimeout(() => particle.remove(), 300);
+                });
+                
+                // Создаем новые частицы с задержкой
+                setTimeout(() => {
+                    createParticles();
+                }, 300);
+            },
+            
+            // Очистить сохраненные настройки (для отладки)
+            clearSavedTheme() {
+                localStorage.removeItem(this.STORAGE_KEY);
+                localStorage.removeItem(this.STORAGE_KEY + '_timestamp');
+                console.log('🗑️ Настройки темы очищены');
+            }
+        };
+        
+        // Упрощенная функция для HTML onclick
+        function toggleTheme() {
+            ThemeManager.toggleTheme();
+        }
+        
+        // Проверка поддержки localStorage
+        function checkLocalStorageSupport() {
+            try {
+                const test = 'localStorage_test';
+                localStorage.setItem(test, test);
+                localStorage.removeItem(test);
+                return true;
+            } catch (error) {
+                console.warn('⚠️ localStorage не поддерживается:', error);
+                return false;
+            }
+        }
+        
+        // Управление модальным окном FAQ
+        function openFAQ() {
+            const modal = document.getElementById('faqModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden'; // Предотвращаем прокрутку фона
+        }
+        
+        function closeFAQ() {
+            const modal = document.getElementById('faqModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.style.overflow = 'auto'; // Восстанавливаем прокрутку
+        }
+        
+        // Закрытие модального окна при клике вне его
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('faqModal');
+            modal.addEventListener('click', function(event) {
+                if (event.target === modal) {
+                    closeFAQ();
+                }
+            });
+            
+            // Закрытие по Escape
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape' && !modal.classList.contains('hidden')) {
+                    closeFAQ();
+                }
+            });
+        });
+
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', function() {
+            // Проверяем поддержку localStorage
+            if (checkLocalStorageSupport()) {
+                ThemeManager.initTheme();
+            } else {
+                // Fallback: используем тему по умолчанию
+                ThemeManager.applyTheme('dark');
+            }
+            
+            createMatrix();
+            createParticles();
+            smoothScroll();
+            addButtonEffects();
+            
+            // Запуск счетчиков с задержкой
+            setTimeout(() => {
+                animateCounter('users-counter', 50000, '+');
+                animateCounter('messages-counter', 1000, '+');
+                animateCounter('countries-counter', 150, '+');
+                animateCounter('uptime-counter', 99.9, '%');
+            }, 1000);
+        });
+
+        // Динамические эффекты при скролле
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const parallax = document.querySelector('.cyber-grid');
+            if (parallax) {
+                parallax.style.transform = `translateY(${scrolled * 0.1}px)`;
+            }
+        });
     </script>
 </body>
 </html>
